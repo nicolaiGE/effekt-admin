@@ -6,6 +6,7 @@ import Select from "react-select";
 
 import { IPaymentMethod, IDonation } from "../../../../models/types";
 import { KIDTextWrapper, DonationInputElement } from "../SingleDonation.style";
+import { amountToInput, isValidAmountInput, parseAmountInput } from "../../../../util/formatting";
 
 interface IProps {
   onChange(input: Partial<IDonation>): void;
@@ -27,10 +28,14 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
     timestamp: (suggestedValues && suggestedValues.timestamp) || new Date(), //Defaults to now
   });
 
+  // The sum is kept as typed, so decimals like "100," survive until the next digit is typed
+  const [sumText, setSumText] = useState<string>(amountToInput(suggestedValues?.sum));
+
   useEffect(() => {
     setState((state) => {
       return { ...state, ...suggestedValues };
     });
+    if (suggestedValues?.sum !== undefined) setSumText(amountToInput(suggestedValues.sum));
   }, [suggestedValues]);
 
   useEffect(() => onChange(state), [state, onChange]);
@@ -81,9 +86,15 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
       </KIDTextWrapper>
 
       <DonationInputElement
-        value={state.sum || ""}
+        value={sumText}
         placeholder="Sum"
-        onChange={(e) => setState({ ...state, sum: parseInt(e.target.value) })}
+        inputMode="decimal"
+        onChange={(e) => {
+          const text = e.target.value;
+          if (!isValidAmountInput(text)) return;
+          setSumText(text);
+          setState({ ...state, sum: parseAmountInput(text) });
+        }}
       />
 
       <DonationInputElement
