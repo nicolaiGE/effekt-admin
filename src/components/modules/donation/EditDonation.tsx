@@ -18,6 +18,7 @@ import { fetchOwnersAction } from "../../../store/owners/owners.actions";
 import { DistributionInput } from "../shared/distribution-input/DistributionInput";
 import { getDonorTaxUnitsAction } from "../../../store/donors/donor-page.actions";
 import { fetchAllCauseareasAction } from "../../../store/causeareas/causeareas.action";
+import { amountToInput, isValidAmountInput, parseAmountInput } from "../../../util/formatting";
 
 export const EditDonation: React.FC<{ inputDonation: IDonation }> = ({ inputDonation }) => {
   const dispatch = useDispatch();
@@ -31,9 +32,13 @@ export const EditDonation: React.FC<{ inputDonation: IDonation }> = ({ inputDona
   const [donation, setDonation] = useState<IDonation & { id: number }>(
     JSON.parse(JSON.stringify(inputDonation)),
   );
+  // The sum is kept as typed, so decimals like "100," survive until the next digit is typed
+  const [sumText, setSumText] = useState<string>(amountToInput(Number(inputDonation.sum)));
   useEffect(() => {
     setDonation(JSON.parse(JSON.stringify(inputDonation)));
+    setSumText(amountToInput(Number(inputDonation.sum)));
   }, [inputDonation]);
+  const sumIsValid = parseAmountInput(sumText) !== undefined;
 
   const paymentMethods = useSelector((state: AppState) => state.singleDonation.paymentMethods);
 
@@ -98,15 +103,14 @@ export const EditDonation: React.FC<{ inputDonation: IDonation }> = ({ inputDona
         <EditDonationKeyInfoInputWrapper>
           <strong>Sum:</strong>
           <EffektInput
-            value={donation.sum}
+            value={sumText}
+            inputMode="decimal"
             onChange={(e) => {
-              if (Number.isNaN(e.currentTarget.value)) {
-                return;
-              }
-              if (parseFloat(e.currentTarget.value) < 0) {
-                return;
-              }
-              setDonation({ ...donation, sum: parseFloat(e.target.value) });
+              const text = e.target.value;
+              if (!isValidAmountInput(text)) return;
+              setSumText(text);
+              const sum = parseAmountInput(text);
+              if (sum !== undefined) setDonation({ ...donation, sum });
             }}
           ></EffektInput>
         </EditDonationKeyInfoInputWrapper>
@@ -150,7 +154,9 @@ export const EditDonation: React.FC<{ inputDonation: IDonation }> = ({ inputDona
           </EffektSelect>
         </EditDonationKeyInfoInputWrapper>
 
-        <EffektButton onClick={updateDonation}>{editSaving ? "Saving..." : "Save"}</EffektButton>
+        <EffektButton onClick={updateDonation} disabled={!sumIsValid}>
+          {editSaving ? "Saving..." : "Save"}
+        </EffektButton>
       </EditDonationKeyInfo>
       {donation.distribution && (
         <DistributionInput
