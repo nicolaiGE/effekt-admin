@@ -9,6 +9,11 @@ import {
   ICreateDistributionAndInsertDonationParams,
   IInsertDonationParams,
 } from "./single-donation.actions";
+import {
+  getDonorDistributionsAction,
+  getDonorDonationsAction,
+  getDonorYearlyAggregatesAction,
+} from "../donors/donor-page.actions";
 
 export function* fetchPaymentMethods(action: any) {
   try {
@@ -56,6 +61,12 @@ export function* insertDonationCall(donation: ICreateDonationParams, token: stri
 export function* insertDonation(action: Action<IInsertDonationParams>) {
   try {
     yield call(insertDonationCall, action.payload.donation, action.payload.token);
+    const { refreshDonorId, token } = action.payload;
+    if (refreshDonorId !== undefined) {
+      yield put(getDonorDonationsAction.started({ id: refreshDonorId, token }));
+      yield put(getDonorDistributionsAction.started({ id: refreshDonorId, token }));
+      yield put(getDonorYearlyAggregatesAction.started({ id: refreshDonorId, token }));
+    }
     //TODO: Refactor to use common "done" action for insertion of donation
     yield put(
       createDistribitionAndInsertDonationAction.done({

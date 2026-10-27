@@ -21,6 +21,8 @@ export interface ICreateDonationParams extends IDonation {
 export interface IInsertDonationParams {
   donation: ICreateDonationParams;
   token: string;
+  /** Reload the donations, distributions and aggregates of this donor after the insert */
+  refreshDonorId?: number;
 }
 
 export interface ICreateDistributionAndInsertDonationParams {

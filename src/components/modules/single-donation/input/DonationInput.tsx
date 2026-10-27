@@ -12,6 +12,8 @@ interface IProps {
   onChange(input: Partial<IDonation>): void;
   paymentMethods: Array<IPaymentMethod>;
   suggestedValues?: Partial<IDonation>;
+  /** When given, the KID is picked from these options instead of typed. The first is preselected. */
+  kidOptions?: Array<{ value: string; label: string }>;
 }
 
 interface IState extends Partial<IDonation> {}
@@ -20,10 +22,11 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
   paymentMethods,
   onChange,
   suggestedValues,
+  kidOptions,
 }) => {
   const [state, setState] = useState<IState>({
     ...suggestedValues,
-    KID: undefined,
+    KID: kidOptions && kidOptions.length > 0 ? kidOptions[0].value : undefined,
     paymentId: (suggestedValues && suggestedValues.paymentId) || 4, //Defaults to vipps
     timestamp: (suggestedValues && suggestedValues.timestamp) || new Date(), //Defaults to now
   });
@@ -76,14 +79,24 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
         dateFormat="dd.MM.yyyy HH:mm"
         timeCaption="time"
       />
-      <KIDTextWrapper>
-        <DonationInputElement
-          placeholder="KID"
-          value={state.KID || ""}
-          style={{ height: "100%" }}
-          onChange={(e) => setState({ ...state, KID: e.target.value })}
-        />
-      </KIDTextWrapper>
+      {kidOptions ? (
+        <div style={{ width: "260px" }}>
+          <Select
+            options={kidOptions}
+            value={kidOptions.find((option) => option.value === state.KID)}
+            onChange={(selected: any) => setState({ ...state, KID: selected.value })}
+          ></Select>
+        </div>
+      ) : (
+        <KIDTextWrapper>
+          <DonationInputElement
+            placeholder="KID"
+            value={state.KID || ""}
+            style={{ height: "100%" }}
+            onChange={(e) => setState({ ...state, KID: e.target.value })}
+          />
+        </KIDTextWrapper>
+      )}
 
       <DonationInputElement
         value={sumText}

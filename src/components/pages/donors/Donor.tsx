@@ -34,6 +34,7 @@ import { AutoGiroList } from "../../modules/autogiro/agreementlist/AutoGiroList"
 import { EffektButton } from "../../style/elements/button.style";
 import { EffektModal } from "../../style/elements/effekt-modal/effekt-modal.component.style";
 import { showDonorSelectionComponent } from "../../../store/donors/donor-selection.actions";
+import { RegisterDonorDonation } from "../../modules/donors/register-donation/RegisterDonorDonation";
 
 export const DonorPage: React.FunctionComponent = () => {
   const { id } = useParams<"id">();
@@ -138,6 +139,7 @@ export const DonorPage: React.FunctionComponent = () => {
         </div>
         <div>
           <EffektTab>
+            <RegisterDonorDonation donorId={donorId} distributions={data.distributions} />
             <DonationsList donations={data.donations} defaultPageSize={10} />
           </EffektTab>
           <EffektTab>
