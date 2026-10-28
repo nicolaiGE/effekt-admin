@@ -19,6 +19,7 @@ import { DonationsPageComponent } from "./pages/donations/Donations";
 import { DonationPageComponent } from "./pages/donations/Donation";
 import { GraphingPageComponent } from "./pages/graphing/Graphing";
 import { AnalysisHomePage } from "./pages/analysis/AnalysisHome";
+import { TilsagnPage } from "./pages/analysis/Tilsagn";
 import { DistributionsPageComponent } from "./pages/distributions/Distributions";
 import { LogsPageComponent } from "./pages/logs/Logs";
 import { LogEntryComponent } from "./pages/logs/LogEntry";
@@ -79,6 +80,7 @@ export const AdminPanel: React.FunctionComponent = () => {
           <Route path="/register/process" element={<ProcessDonations />} />
           <Route path="/graphing" element={<GraphingPageComponent />} />
           <Route path="/analysis" element={<AnalysisHomePage />} />
+          <Route path="/tilsagn" element={<TilsagnPage />} />
           <Route path="/reports" element={<ReportsComponent />} />
           <Route path="/donors" element={<DonorsPageComponent />} />
           <Route path="/donors/:id" element={<DonorPage />} />

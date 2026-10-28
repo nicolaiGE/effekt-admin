@@ -65,8 +65,18 @@ import {
 } from "./store/donations/donation.saga";
 import { fetchSumByMonth, fetchTotalByPeriod } from "./store/graphing/graphing.saga";
 import { fetchSumByMonthAction, fetchTotalByPeriodAction } from "./store/graphing/graphing.actions";
-import { fetchAnalysisOverview } from "./store/analysis/analysis.saga";
-import { fetchAnalysisOverviewAction } from "./store/analysis/analysis.actions";
+import {
+  deleteTilsagn,
+  fetchAnalysisOverview,
+  fetchTilsagn,
+  saveTilsagn,
+} from "./store/analysis/analysis.saga";
+import {
+  deleteTilsagnAction,
+  fetchAnalysisOverviewAction,
+  fetchTilsagnAction,
+  saveTilsagnAction,
+} from "./store/analysis/analysis.actions";
 import {
   exportDistributions,
   fetchDistribution,
@@ -310,6 +320,9 @@ function* watchAll() {
 
     takeLatest(fetchTotalByPeriodAction.started.type, fetchTotalByPeriod),
     takeLatest(fetchAnalysisOverviewAction.started.type, fetchAnalysisOverview),
+    takeLatest(fetchTilsagnAction.started.type, fetchTilsagn),
+    takeLatest(saveTilsagnAction.started.type, saveTilsagn),
+    takeLatest(deleteTilsagnAction.started.type, deleteTilsagn),
     takeLatest(fetchSumByMonthAction.started.type, fetchSumByMonth),
     takeLatest(fetchHistogramAction.started.type, fetchHistogram),
 

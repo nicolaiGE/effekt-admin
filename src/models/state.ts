@@ -1,5 +1,6 @@
 import {
   IAnalysisOverview,
+  ITilsagn,
   IDonor,
   IPaymentMethod,
   IInvalidTransaction,
@@ -250,6 +251,7 @@ export interface VippsMatchingRulesState {
 
 export interface AnalysisState {
   overview?: IAnalysisOverview;
+  tilsagn?: Array<ITilsagn>;
 }
 
 export interface GraphingState {

@@ -621,3 +621,14 @@ export interface IAnalysisOverview {
     passed: boolean;
   };
 }
+
+/** A tilsagn (pledge): a decided gift not received yet. Only amount and dates, never the giver */
+export interface ITilsagn {
+  id: number;
+  sum: number;
+  decidedDate: string;
+  receivedDate: string | null;
+  donationId: number | null;
+}
+
+export type ITilsagnInput = Omit<ITilsagn, "id">;
