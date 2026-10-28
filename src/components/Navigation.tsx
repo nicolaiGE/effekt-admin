@@ -25,6 +25,7 @@ import {
   Globe,
   Tag,
   Target,
+  TrendingUp,
 } from "react-feather";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AdminPanelLocale } from "../models/locale";
@@ -41,6 +42,10 @@ const localeMenuGroups = {
         { to: "/distributions", label: "Distributions", icon: PieChart },
         { to: "/donations", label: "Donations", icon: List },
       ],
+    },
+    {
+      header: "Analysis",
+      items: [{ to: "/analysis", label: "Overview", icon: TrendingUp }],
     },
     {
       header: "Agreements",

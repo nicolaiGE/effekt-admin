@@ -65,6 +65,8 @@ import {
 } from "./store/donations/donation.saga";
 import { fetchSumByMonth, fetchTotalByPeriod } from "./store/graphing/graphing.saga";
 import { fetchSumByMonthAction, fetchTotalByPeriodAction } from "./store/graphing/graphing.actions";
+import { fetchAnalysisOverview } from "./store/analysis/analysis.saga";
+import { fetchAnalysisOverviewAction } from "./store/analysis/analysis.actions";
 import {
   exportDistributions,
   fetchDistribution,
@@ -307,6 +309,7 @@ function* watchAll() {
     takeLatest(fetchTransactionCostsReportAction.started.type, fetchTransactionCostsReport),
 
     takeLatest(fetchTotalByPeriodAction.started.type, fetchTotalByPeriod),
+    takeLatest(fetchAnalysisOverviewAction.started.type, fetchAnalysisOverview),
     takeLatest(fetchSumByMonthAction.started.type, fetchSumByMonth),
     takeLatest(fetchHistogramAction.started.type, fetchHistogram),
 

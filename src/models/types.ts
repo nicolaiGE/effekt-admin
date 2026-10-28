@@ -596,3 +596,28 @@ export interface IVippsMatchingRule {
   resolveAdoveoFundraiserID: number | null;
   precedence: number;
 }
+
+/** Analysis */
+
+/** Totals for the analysis home page. Pledges are a separate layer, never part of measured */
+export interface IAnalysisOverview {
+  thisYear: {
+    year: number;
+    sum: number;
+  };
+  throughTime: {
+    measured: number;
+    donations: number;
+    from: string | null;
+  };
+  pledges: {
+    open: number;
+    count: number;
+  };
+  withPledges: {
+    sum: number;
+    milestone: number;
+    remaining: number;
+    passed: boolean;
+  };
+}

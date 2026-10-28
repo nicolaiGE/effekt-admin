@@ -1,4 +1,5 @@
 import {
+  IAnalysisOverview,
   IDonor,
   IPaymentMethod,
   IInvalidTransaction,
@@ -44,6 +45,7 @@ import { DateTime } from "luxon";
 
 export interface AppState {
   graphing: GraphingState;
+  analysis: AnalysisState;
 
   donorSelector: DonorSelectorState;
   donorCreation: CreateDonorState;
@@ -244,6 +246,10 @@ export interface AutoGiroMandatesState {
 export interface VippsMatchingRulesState {
   rules: Array<IVippsMatchingRule>;
   loading: boolean;
+}
+
+export interface AnalysisState {
+  overview?: IAnalysisOverview;
 }
 
 export interface GraphingState {

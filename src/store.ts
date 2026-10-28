@@ -9,6 +9,7 @@ import { reportProcessingReducer } from "./store/process/process.reducer";
 import { CreateDonorReducer } from "./store/donors/create-donor.reducer";
 import { donationsReducer } from "./store/donations/donations.reducer";
 import { graphingReducer } from "./store/graphing/graphing.reducer";
+import { analysisReducer } from "./store/analysis/analysis.reducer";
 import { distributionsReducer } from "./store/distributions/distributions.reducer";
 import { ownersReducer } from "./store/owners/owners.reducer";
 import { receiptReducer } from "./store/donations/receipt.reducer";
@@ -32,6 +33,7 @@ import { organizationsReducer } from "./store/organizations/organizations.reduce
 
 const rootReducer = combineReducers<AppState>({
   graphing: graphingReducer,
+  analysis: analysisReducer,
   donorSelector: donorSelectorReducer,
   donorCreation: CreateDonorReducer,
   donorPage: donorPageReducer,
