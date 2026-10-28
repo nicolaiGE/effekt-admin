@@ -8,6 +8,8 @@ export const SingleDonationWrapper = styled.div`
 
 export const InputWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   justify-content: space-between;
   margin-bottom: 12px;
   position: relative;

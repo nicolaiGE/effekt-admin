@@ -3,8 +3,11 @@ import React, { useState, useEffect } from "react";
 import { EffektDatePicker } from "../../../style/elements/datepicker/datepicker.style";
 
 import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
 
-import { IPaymentMethod, IDonation } from "../../../../models/types";
+import { IPaymentMethod, IDonation, IDataOwner } from "../../../../models/types";
+import { AppState } from "../../../../models/state";
+import { fetchOwnersAction } from "../../../../store/owners/owners.actions";
 import { KIDTextWrapper, DonationInputElement } from "../SingleDonation.style";
 import { amountToInput, isValidAmountInput, parseAmountInput } from "../../../../util/formatting";
 
@@ -24,12 +27,29 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
   suggestedValues,
   kidOptions,
 }) => {
+  const dispatch = useDispatch();
+  const dataOwners = useSelector((state: AppState) => state.dataOwner.owners);
+  const currentOwner = useSelector((state: AppState) => state.dataOwner.current);
+
   const [state, setState] = useState<IState>({
     ...suggestedValues,
     KID: kidOptions && kidOptions.length > 0 ? kidOptions[0].value : undefined,
     paymentId: (suggestedValues && suggestedValues.paymentId) || 4, //Defaults to vipps
     timestamp: (suggestedValues && suggestedValues.timestamp) || new Date(), //Defaults to now
+    metaOwnerId: suggestedValues?.metaOwnerId ?? currentOwner?.id, //Defaults to the owner selected in the menu
   });
+
+  useEffect(() => {
+    if (!dataOwners) dispatch(fetchOwnersAction.started(undefined));
+  }, [dataOwners, dispatch]);
+
+  // The selected owner may load after the form is shown
+  useEffect(() => {
+    if (currentOwner)
+      setState((state) =>
+        state.metaOwnerId === undefined ? { ...state, metaOwnerId: currentOwner.id } : state,
+      );
+  }, [currentOwner]);
 
   // The sum is kept as typed, so decimals like "100," survive until the next digit is typed
   const [sumText, setSumText] = useState<string>(amountToInput(suggestedValues?.sum));
@@ -67,6 +87,9 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
   };
 
   let methodsSelect = paymentMethods && getMethodsSelect(paymentMethods);
+
+  const ownerToOption = (owner: IDataOwner) => ({ value: owner.id, label: owner.name });
+  const currentDataOwner = dataOwners?.find((owner) => owner.id === state.metaOwnerId);
 
   return (
     <React.Fragment>
@@ -116,6 +139,16 @@ export const DonationInput: React.FunctionComponent<IProps> = ({
         onChange={(e) => setState({ ...state, paymentExternalRef: e.target.value })}
       />
       {methodsSelect}
+      {dataOwners && (
+        <div style={{ width: "200px" }}>
+          <Select
+            options={dataOwners.map(ownerToOption)}
+            value={currentDataOwner ? ownerToOption(currentDataOwner) : null}
+            placeholder="Data owner"
+            onChange={(selected: any) => setState({ ...state, metaOwnerId: selected.value })}
+          ></Select>
+        </div>
+      )}
     </React.Fragment>
   );
 };

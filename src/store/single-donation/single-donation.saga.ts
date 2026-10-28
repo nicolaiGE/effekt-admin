@@ -49,7 +49,8 @@ export function* insertDonationCall(donation: ICreateDonationParams, token: stri
       endpoint: "/donations/confirm",
       method: API.Method.POST,
       token: token,
-      data: donation,
+      // The API reads the owner as metaOwnerID and uses the default owner when it is missing
+      data: { ...donation, metaOwnerID: donation.metaOwnerId },
     });
     if (data.status !== 200) throw new Error(data.content);
     return data.content;
